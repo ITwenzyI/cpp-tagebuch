@@ -28,7 +28,7 @@ Das Projekt dient sowohl als Lernprojekt für Datei-I/O, Zeitfunktionen, Strings
 
 ## 📂 Beispiel-Datei (data/04.05.2025.txt)
 
-       Erstellt von Kilian am 04.05.2025. :)
+Erstellt von Kilian am 04.05.2025. :)
 #Training: 30 Min Laufen
 #Essen: gesund, 3 Mahlzeiten
 #Schlaf: 7h

@@ -30,12 +30,19 @@ Das Projekt dient sowohl als Lernprojekt für Datei-I/O, Zeitfunktionen, Strings
 
 Erstellt von Kilian am 04.05.2025. :)
 #Training: 30 Min Laufen
+
 #Essen: gesund, 3 Mahlzeiten
+
 #Schlaf: 7h
+
 #Stimmung: ausgeglichen
+
 #Produktivität: gut
+
 #Freizeit: 2h Netflix
+
 #Geld: 5€ ausgegeben
+
 ------------------------------
 Zuletzt bearbeitet am: 05.05.2025 (Bearbeitet: #Stimmung)
 

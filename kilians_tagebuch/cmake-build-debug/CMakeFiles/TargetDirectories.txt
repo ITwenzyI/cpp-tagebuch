@@ -1,0 +1,3 @@
+D:/digitales_tagebuch/cmake-build-debug/CMakeFiles/DigitalesTagebuch.dir
+D:/digitales_tagebuch/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/digitales_tagebuch/cmake-build-debug/CMakeFiles/rebuild_cache.dir

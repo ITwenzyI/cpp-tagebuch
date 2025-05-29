@@ -1,0 +1,8 @@
+       Erstellt von Kilian am 29.05.2025. :)
+#Training: Example
+#Essen: Example
+#Schlaf: Example
+#Stimmung: Example
+#Produktivität: Example
+#Freizeit: Example
+#Geld: Example

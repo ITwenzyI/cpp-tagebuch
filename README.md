@@ -1,7 +1,7 @@
 # 📘 C++ Tagebuch – Persönliches C++-Journal
 
 Ein persönliches Tagebuch-Tool in C++, das tägliche Einträge über Training, Essen, Schlaf, Stimmung, Produktivität, Freizeit und Finanzen erfasst, speichert, bearbeitet und durchsucht.  
-Das Projekt dient sowohl als Lernprojekt für Datei-I/O, Zeitfunktionen, Strings und std::filesystem als auch als praktisches Tool für mich selbst.
+Das Projekt dient sowohl als Lernprojekt für Datei-I/O, Zeitfunktionen, Strings und std::filesystem als auch als praktisches Tool für mich selbst. Vorschläge sind immer willkommen :).
 
 ---
 

@@ -56,4 +56,4 @@ Es ist bewusst textbasiert, um Einblick in einfache Benutzerführung und Dateisy
 Ideal für Einsteiger*innen, die C++ praxisnah üben möchten.
 
 ## 🧑‍💻 Author
-**Kilian – Student Medizinische Informatik | OTH Regensburg**
+**Kilian – Student Medizinische Informatik**

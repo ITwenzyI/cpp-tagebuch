@@ -55,5 +55,6 @@ Es ist bewusst textbasiert, um Einblick in einfache Benutzerführung und Dateisy
 
 Ideal für Einsteiger*innen, die C++ praxisnah üben möchten.
 
-## 🧑‍💻 Author
-**Kilian – Student Medizinische Informatik**
+## 👤 Author
+This project was created by **Kilian** as part of independent study in Medical Informatics.
+The software was fully developed in C++ using modern programming techniques.

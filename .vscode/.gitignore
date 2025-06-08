@@ -1,0 +1,65 @@
+# Prerequisites
+*.d
+
+.idea/
+# Compiled Object files
+*.slo
+*.lo
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Privat
+docs/
+
+# Build-Ordner
+cmake-build-debug/
+cmake-build-release/
+
+# CMake-Dateien
+CMakeFiles/
+CMakeCache.txt
+Makefile
+install_manifest.txt
+
+# CLion & JetBrains spezifische Dateien
+.idea/
+*.iml
+
+# Compiler-Ausgaben
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+*.app
+
+# Extra
+.vscode
+data
+
+# Log-Dateien
+*.log
+
+# Mac/Linux spezifisch (falls du zwischen Windows & macOS arbeitest)
+.DS_Store
+*.swp

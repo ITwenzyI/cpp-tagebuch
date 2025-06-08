@@ -105,7 +105,7 @@ void EntryManager::editEntry() {
 
     std::string new_content;
     std::string original_line2;
-    if (answer == "Ja" or answer == "ja") {
+    if (answer == "Ja" || answer == "ja") {
         std::cout << "Gebe den neuen Text für die Zeile: " << line_edit << " ein." << std::endl;
         std::getline(std::cin, new_content); // Liest ganze Zeile ein auch mit Leerzeichen
                                                     //std::cin >> new_content; liest nur 1 Wort ein = Problem

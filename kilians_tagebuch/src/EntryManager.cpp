@@ -202,7 +202,7 @@ void EntryManager::showEntry() {
     std::cout << "Willst du diesen Eintrag: " << date << " bearbeiten? (Ja oder Nein)" << std::endl;
     std::cin >> answer;
     std::cin.ignore(); // Leerzeichen ignorieren
-    if (answer == "Ja" or answer == "ja") {
+    if (answer == "Ja" || answer == "ja") {
         int line_edit;
         std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)" << std::endl;
         std::cin >> line_edit;
@@ -214,7 +214,7 @@ void EntryManager::showEntry() {
 
         std::string original_line2;
         std::string new_content;
-        if (answer2 == "Ja" or answer2 == "ja") {
+        if (answer2 == "Ja" || answer2 == "ja") {
             std::cout << "Gebe den neuen Text für die Zeile: " << line_edit << " ein." << std::endl;
             std::getline(std::cin, new_content); // Liest ganze Zeile ein auch mit Leerzeichen
 
@@ -317,7 +317,7 @@ void EntryManager::deleteEntry() {
     std::cerr << "Du willst also diesen Eintrag vom " << date << " entfernen?"  << std::endl;
     std::cin >> answer;
     std::cin.ignore();
-    if (answer == "Ja" or answer == "ja") {
+    if (answer == "Ja" || answer == "ja") {
         if (fs::exists(path)) {
             if (fs::remove(path)) {
                 std::cerr << "Eintrag wurde entfernt.\n";

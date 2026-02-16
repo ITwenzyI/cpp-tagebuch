@@ -125,7 +125,7 @@ void EntryService::bearbeiteEintragInteraktiv(
 
         if (pos != std::string::npos) {
             const std::string prefix = originalLine.substr(0, pos + 1); // z.B. "#Training:"
-            lines[line_edit - 1] = prefix + " " + new_content;          // neue Zeile zusammensetzen
+            lines[line_edit - 1] = prefix + " " + new_content; // neue Zeile zusammensetzen
         } else {
             std::cerr << "Ungültiges Format! Kein ':' gefunden.\n";
         }
@@ -140,7 +140,8 @@ void EntryService::bearbeiteEintragInteraktiv(
     haengeAenderungsvermerkAn(date, originalLine);
 }
 
-void EntryService::haengeAenderungsvermerkAn(const std::string& date, const std::string& originalLine) {
+void EntryService::haengeAenderungsvermerkAn(
+    const std::string& date, const std::string& originalLine) {
     std::string category;
     const size_t pos2 = originalLine.find(":");
     if (pos2 != std::string::npos) {
@@ -148,8 +149,8 @@ void EntryService::haengeAenderungsvermerkAn(const std::string& date, const std:
     }
 
     if (!repository.haengeAn(date,
-            "------------------------------\nZuletzt bearbeitet am: " + aktuellesDatumAlsString()
-                + " (Bearbeitet: " + category + ")\n")) {
+            "------------------------------\nZuletzt bearbeitet am: " + aktuellesDatumAlsString() +
+                " (Bearbeitet: " + category + ")\n")) {
         std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
     }
 }

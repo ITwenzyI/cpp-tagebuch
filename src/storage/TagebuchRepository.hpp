@@ -11,7 +11,8 @@ class TagebuchRepository {
     void erstelleDatenOrdner() const;
     [[nodiscard]] bool schreibeNeuenEintrag(
         const std::string& datum, const std::vector<std::string>& zeilen) const;
-    [[nodiscard]] bool leseEintrag(const std::string& datum, std::vector<std::string>& zeilen) const;
+    [[nodiscard]] bool leseEintrag(
+        const std::string& datum, std::vector<std::string>& zeilen) const;
     [[nodiscard]] bool leseDatei(
         const std::filesystem::path& dateiPfad, std::vector<std::string>& zeilen) const;
     [[nodiscard]] bool ueberschreibeEintrag(

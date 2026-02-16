@@ -28,7 +28,8 @@ bool TagebuchRepository::schreibeNeuenEintrag(
     return true;
 }
 
-bool TagebuchRepository::leseEintrag(const std::string& datum, std::vector<std::string>& zeilen) const {
+bool TagebuchRepository::leseEintrag(
+    const std::string& datum, std::vector<std::string>& zeilen) const {
     return leseDatei(eintragPfad(datum), zeilen);
 }
 

@@ -3,7 +3,7 @@
 #include <string>
 
 class EntryManager {
-public:
+  public:
     void createEntry();
     void editEntry();
     void showEntry();

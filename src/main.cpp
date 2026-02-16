@@ -1,9 +1,9 @@
 
-#include <iostream>
-#include "EntryManager.hpp"
-#include <windows.h>
-#include <io.h>
+#include "include/EntryManager.hpp"
 #include <fcntl.h>
+#include <io.h>
+#include <iostream>
+#include <windows.h>
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
@@ -36,13 +36,24 @@ int main() {
             std::cin.ignore(); // Leerzeichen ignorieren
 
             switch (choice_alltag) {
-                case 1: entrymanager.createEntry(); break;
-                case 2: entrymanager.showEntry(); break;
-                case 3: entrymanager.editEntry(); break;
-                case 4: entrymanager.deleteEntry(); break;
-                case 5: entrymanager.searchhashtagEntry(); break;
-                default: std::cerr << "Danke dir :)!\n"; return 0;
-
+            case 1:
+                entrymanager.createEntry();
+                break;
+            case 2:
+                entrymanager.showEntry();
+                break;
+            case 3:
+                entrymanager.editEntry();
+                break;
+            case 4:
+                entrymanager.deleteEntry();
+                break;
+            case 5:
+                entrymanager.searchhashtagEntry();
+                break;
+            default:
+                std::cerr << "Danke dir :)!\n";
+                return 0;
             }
         }
 

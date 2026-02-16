@@ -1,15 +1,14 @@
-#include "EntryManager.hpp"
-#include <iostream>
-#include <fstream>
-#include <ctime>
-#include <iomanip>
-#include <filesystem>
-#include <sstream>
-#include <vector>
-#include <string>
-#include <limits>
+#include "include/EntryManager.hpp"
 #include <algorithm> // für std::remove
-
+#include <ctime>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <sstream>
+#include <string>
+#include <vector>
 
 namespace fs = std::filesystem; // Zeile 39 => fs statt std::filesystem
 
@@ -40,8 +39,6 @@ void EntryManager::createEntry() {
     std::cout << "#Geld: ";
     std::getline(std::cin, geld);
 
-
-
     fs::create_directories("data");
     std::ofstream file("data/" + dateStr + ".txt");
 
@@ -61,11 +58,9 @@ void EntryManager::createEntry() {
     }
 }
 
-
 // ------------------------------------------------------------------------------------------------
 //                                  EINTRÄGE BEARBEITEN
 // ------------------------------------------------------------------------------------------------
-
 
 void EntryManager::editEntry() {
     std::cout << "Welches Datum willst du bearbeiten (TT.MM.JJJJ)?" << std::endl;
@@ -75,7 +70,7 @@ void EntryManager::editEntry() {
 
     std::ifstream file(path);
 
-    if(!file) {
+    if (!file) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
@@ -89,26 +84,27 @@ void EntryManager::editEntry() {
 
     file.close();
 
-
     size_t line_edit;
     for (line_edit = 0; line_edit < lines.size(); ++line_edit) {
         std::cout << line_edit + 1 << "." << lines[line_edit] << std::endl;
     }
-    std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)" << std::endl;
+    std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)"
+              << std::endl;
     std::cin >> line_edit;
-    std::cout << "Du willst also die Zeile: " << line_edit << " bearbeiten? (Ja oder Nein)" <<std::endl;
+    std::cout << "Du willst also die Zeile: " << line_edit << " bearbeiten? (Ja oder Nein)"
+              << std::endl;
     std::string answer;
     std::cin >> answer;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Leert Speicher also das \n von oben cin answer :D
-
-
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+        '\n'); // Leert Speicher also das \n von oben cin answer :D
 
     std::string new_content;
     std::string original_line2;
     if (answer == "Ja" || answer == "ja") {
         std::cout << "Gebe den neuen Text für die Zeile: " << line_edit << " ein." << std::endl;
-        std::getline(std::cin, new_content); // Liest ganze Zeile ein auch mit Leerzeichen
-                                                    //std::cin >> new_content; liest nur 1 Wort ein = Problem
+        std::getline(
+            std::cin, new_content); // Liest ganze Zeile ein auch mit Leerzeichen
+                                    // std::cin >> new_content; liest nur 1 Wort ein = Problem
 
         std::string original_line = lines[line_edit - 1];
         original_line2 = original_line;
@@ -117,29 +113,25 @@ void EntryManager::editEntry() {
         size_t pos = original_line.find(":");
 
         if (pos != std::string::npos) {
-            std::string prefix = original_line.substr(0, pos + 1);  // z.B. "#Training:"
-            lines[line_edit - 1] = prefix + " " + new_content;      // neue Zeile zusammensetzen
+            std::string prefix = original_line.substr(0, pos + 1); // z.B. "#Training:"
+            lines[line_edit - 1] = prefix + " " + new_content;     // neue Zeile zusammensetzen
         } else {
             std::cerr << "Ungültiges Format! Kein ':' gefunden.\n";
         }
-
     }
 
-
-    std::ofstream out_file(path, std::ios::trunc);  // Datei überschreiben
+    std::ofstream out_file(path, std::ios::trunc); // Datei überschreiben
 
     if (!out_file) {
         std::cerr << "Failed to open Datei to write!\n";
         return;
     }
 
-
     for (const auto& updated_line : lines) {
-        out_file << updated_line << '\n';  // jede Zeile reinschreiben
+        out_file << updated_line << '\n'; // jede Zeile reinschreiben
     }
 
-
-    out_file.close();  // wichtig: Datei schließen
+    out_file.close(); // wichtig: Datei schließen
 
     // 1. Aktuelles Datum
     std::time_t t = std::time(nullptr);
@@ -158,15 +150,14 @@ void EntryManager::editEntry() {
     // 3. Änderungsvermerk unten anhängen
     std::ofstream append_file(path, std::ios::app); // Anhängen
     if (append_file) {
-        append_file << "------------------------------\n" << "Zuletzt bearbeitet am: " << dateStr << " (Bearbeitet: " << category << ")\n";
+        append_file << "------------------------------\n"
+                    << "Zuletzt bearbeitet am: " << dateStr << " (Bearbeitet: " << category
+                    << ")\n";
         append_file.close();
     } else {
         std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
     }
-
-
 }
-
 
 // ------------------------------------------------------------------------------------------------
 //                                  EINTRÄGE ANSCHAUEN
@@ -180,7 +171,7 @@ void EntryManager::showEntry() {
 
     std::ifstream file(path);
 
-    if(!file) {
+    if (!file) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
@@ -204,13 +195,15 @@ void EntryManager::showEntry() {
     std::cin.ignore(); // Leerzeichen ignorieren
     if (answer == "Ja" || answer == "ja") {
         int line_edit;
-        std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)" << std::endl;
+        std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)"
+                  << std::endl;
         std::cin >> line_edit;
-        std::cout << "Du willst also die Zeile: " << line_edit << " bearbeiten? (Ja oder Nein)" <<std::endl;
+        std::cout << "Du willst also die Zeile: " << line_edit << " bearbeiten? (Ja oder Nein)"
+                  << std::endl;
         std::string answer2;
         std::cin >> answer2;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Leert Speicher also das \n von oben cin answer :D
-
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+            '\n'); // Leert Speicher also das \n von oben cin answer :D
 
         std::string original_line2;
         std::string new_content;
@@ -225,16 +218,14 @@ void EntryManager::showEntry() {
             size_t pos = original_line.find(":");
 
             if (pos != std::string::npos) {
-                std::string prefix = original_line.substr(0, pos + 1);  // z.B. "#Training:"
-                lines[line_edit - 1] = prefix + " " + new_content;      // neue Zeile zusammensetzen
+                std::string prefix = original_line.substr(0, pos + 1); // z.B. "#Training:"
+                lines[line_edit - 1] = prefix + " " + new_content;     // neue Zeile zusammensetzen
             } else {
                 std::cerr << "Ungültiges Format! Kein ':' gefunden.\n";
             }
-
         }
 
-
-        std::ofstream out_file(path, std::ios::trunc);  // Datei überschreiben
+        std::ofstream out_file(path, std::ios::trunc); // Datei überschreiben
 
         if (!out_file) {
             std::cerr << "Datei konnte nicht gelesen werden.\n";
@@ -242,10 +233,10 @@ void EntryManager::showEntry() {
         }
 
         for (const auto& updated_line : lines) {
-            out_file << updated_line << '\n';  // jede Zeile reinschreiben
+            out_file << updated_line << '\n'; // jede Zeile reinschreiben
         }
 
-        out_file.close();  // wichtig: Datei sauber schließen
+        out_file.close(); // wichtig: Datei sauber schließen
 
         // 1. Aktuelles Datum
         std::time_t t = std::time(nullptr);
@@ -264,16 +255,14 @@ void EntryManager::showEntry() {
         // 3. Änderungsvermerk unten anhängen
         std::ofstream append_file(path, std::ios::app); // Anhängen
         if (append_file) {
-            append_file << "------------------------------\n" << "Zuletzt bearbeitet am: " << dateStr << " (Bearbeitet: " << category << ")\n";
+            append_file << "------------------------------\n"
+                        << "Zuletzt bearbeitet am: " << dateStr << " (Bearbeitet: " << category
+                        << ")\n";
             append_file.close();
         } else {
             std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
         }
-
-
     }
-
-
 }
 
 void EntryManager::onlyshowEntry(std::string date) {
@@ -281,7 +270,7 @@ void EntryManager::onlyshowEntry(std::string date) {
 
     std::ifstream file(path);
 
-    if(!file) {
+    if (!file) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
@@ -298,9 +287,7 @@ void EntryManager::onlyshowEntry(std::string date) {
     for (size_t l = 0; l < lines.size(); ++l) {
         std::cout << l + 1 << "." << lines[l] << std::endl;
     }
-
 }
-
 
 // ------------------------------------------------------------------------------------------------
 //                                  EINTRÄGE LÖSCHEN
@@ -314,7 +301,7 @@ void EntryManager::deleteEntry() {
 
     onlyshowEntry(date);
     std::string answer;
-    std::cerr << "Du willst also diesen Eintrag vom " << date << " entfernen?"  << std::endl;
+    std::cerr << "Du willst also diesen Eintrag vom " << date << " entfernen?" << std::endl;
     std::cin >> answer;
     std::cin.ignore();
     if (answer == "Ja" || answer == "ja") {
@@ -330,17 +317,19 @@ void EntryManager::deleteEntry() {
     }
 }
 
-
 // ------------------------------------------------------------------------------------------------
 //                                  EINTRÄGE SUCHEN #
 // ------------------------------------------------------------------------------------------------
 
 void EntryManager::searchhashtagEntry() {
     std::string hashtag;
-    std::cout << "Nach welchem # willst du Suchen (Zur Auswahl: Training, Essen, Schlaf, Stimmung, Produktivität, Freizeit und Geld)?" << std::endl;
+    std::cout << "Nach welchem # willst du Suchen (Zur Auswahl: Training, Essen, Schlaf, Stimmung, "
+                 "Produktivität, Freizeit und Geld)?"
+              << std::endl;
     std::cin >> hashtag;
     std::string startDate, endDate;
-    std::cout << "In welchem Zeitraum willst du den #" << hashtag << " suchen und ausgeben?" << std::endl;
+    std::cout << "In welchem Zeitraum willst du den #" << hashtag << " suchen und ausgeben?"
+              << std::endl;
     std::cout << "Start-Datum (TT.MM.JJJJ) : " << std::endl;
     std::cin >> startDate;
     std::cout << "End-Datum (TT.MM.JJJJ) : " << std::endl;
@@ -375,7 +364,6 @@ void EntryManager::searchhashtagEntry() {
             // Datei liegt im Zeitraum → hier kannst du später öffnen und nach Hashtag suchen
             std::string path = entry.path().string(); // vollständiger Pfad
 
-
             std::ifstream file(path);
             if (!file) {
                 std::cerr << "Datei konnte nicht gelesen werden.\n";
@@ -396,12 +384,9 @@ void EntryManager::searchhashtagEntry() {
             }
 
             file.close();
-
         }
     }
     std::string happy;
     std::cout << "Bist du Zufrieden?" << std::endl;
     std::cin >> happy;
-
-
 }

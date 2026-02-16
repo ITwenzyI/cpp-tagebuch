@@ -6,6 +6,7 @@
 #include <sstream>
 
 std::string aktuellesDatumAlsString() {
+    // Liefert exakt das Datumsformat, das im Dateinamen verwendet wird.
     const std::time_t zeitstempel = std::time(nullptr);
     const std::tm lokaleZeit = *std::localtime(&zeitstempel);
 
@@ -15,6 +16,7 @@ std::string aktuellesDatumAlsString() {
 }
 
 int datumOhnePunkteAlsZahl(std::string datum) {
+    // Entfernt Trennzeichen, damit lexikalische Probleme bei Zahlenvergleichen entfallen.
     datum.erase(std::remove(datum.begin(), datum.end(), '.'), datum.end());
     return std::stoi(datum);
 }

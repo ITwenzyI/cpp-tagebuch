@@ -6,6 +6,7 @@
 namespace fs = std::filesystem;
 
 const fs::path& TagebuchRepository::datenOrdnerPfad() {
+    // Einmalig initialisiert, dann für alle Repository-Operationen wiederverwendet.
     static const fs::path datenOrdner = "data";
     return datenOrdner;
 }
@@ -39,6 +40,7 @@ bool TagebuchRepository::leseDatei(
     }
 
     std::string line;
+    // Liest unverändert zeilenweise, da Bearbeitung/Anzeige zeilenbasiert funktioniert.
     while (std::getline(file, line)) {
         zeilen.push_back(line);
     }

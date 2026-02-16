@@ -7,8 +7,10 @@
 #include <windows.h>
 
 int Application::starte() {
+    // Erzwingt UTF-8 für korrekte Konsolenausgabe unter Windows.
     SetConsoleOutputCP(CP_UTF8);
 
+    // Composition Root: erstellt konkrete Abhängigkeiten und verdrahtet sie.
     EntryService entryService;
     ConsoleRenderer renderer;
     ConsoleInput input;

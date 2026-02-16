@@ -7,7 +7,9 @@
 
 class MenuController {
   public:
+    // Verwendet Dependency Injection für UI- und Service-Komponenten.
     MenuController(ConsoleRenderer& renderer, ConsoleInput& input, EntryService& entryService);
+    // Enthält die zentrale Menüschleife der Konsolenanwendung.
     int starte();
 
   private:

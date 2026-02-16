@@ -1,4 +1,5 @@
 #include "EntryManager.hpp"
+#include "../domain/Entry.hpp"
 #include <algorithm> // für std::remove
 #include <ctime>
 #include <filesystem>
@@ -13,51 +14,45 @@
 namespace fs = std::filesystem; // Zeile 39 => fs statt std::filesystem
 
 void EntryManager::createEntry() {
-    std::string author, training, essen, schlaf, stimmung, produktivität, freizeit, geld;
+    Entry eintrag;
 
     std::time_t t = std::time(nullptr);
     std::tm tm = *std::localtime(&t);
     std::ostringstream oss;
     oss << std::put_time(&tm, "%d.%m.%Y");
-    std::string dateStr = oss.str();
+    eintrag.datum = oss.str();
 
-    std::cout << "Eintrag für " << dateStr << " erstellen:\n" << std::endl;
+    std::cout << "Eintrag für " << eintrag.datum << " erstellen:\n" << std::endl;
     std::cout << "Author: " << std::endl;
-    std::getline(std::cin, author);
+    std::getline(std::cin, eintrag.author);
     std::cout << "#Training: ";
-    std::getline(std::cin, training);
+    std::getline(std::cin, eintrag.training);
     std::cout << "#Essen: ";
-    std::getline(std::cin, essen);
+    std::getline(std::cin, eintrag.essen);
     std::cout << "#Schlaf: ";
-    std::getline(std::cin, schlaf);
+    std::getline(std::cin, eintrag.schlaf);
     std::cout << "#Stimmung: ";
-    std::getline(std::cin, stimmung);
+    std::getline(std::cin, eintrag.stimmung);
     std::cout << "#Produktivität: ";
-    std::getline(std::cin, produktivität);
+    std::getline(std::cin, eintrag.produktivitaet);
     std::cout << "#Freizeit: ";
-    std::getline(std::cin, freizeit);
+    std::getline(std::cin, eintrag.freizeit);
     std::cout << "#Geld: ";
-    std::getline(std::cin, geld);
+    std::getline(std::cin, eintrag.geld);
 
     fs::create_directories("data");
-    std::ofstream file("data/" + dateStr + ".txt");
+    std::ofstream file("data/" + eintrag.datum + ".txt");
 
     if (file.is_open()) {
-        file << "       Erstellt von " << author << " am " << dateStr << ". :)" << "\n";
-        file << "#Training: " << training << "\n";
-        file << "#Essen: " << essen << "\n";
-        file << "#Schlaf: " << schlaf << "\n";
-        file << "#Stimmung: " << stimmung << "\n";
-        file << "#Produktivität: " << produktivität << "\n";
-        file << "#Freizeit: " << freizeit << "\n";
-        file << "#Geld: " << geld << "\n";
+        for (const auto& zeile : eintrag.inDateiZeilen()) {
+            file << zeile << "\n";
+        }
         file.close();
-        std::cout << "Eintrag gespeichert unter data/" << dateStr << ".txt\n";
+        std::cout << "Eintrag gespeichert unter data/" << eintrag.datum << ".txt\n";
     } else {
         std::cerr << "Fehler beim Speichern des Eintrags!\n";
     }
 }
-
 // ------------------------------------------------------------------------------------------------
 //                                  EINTRÄGE BEARBEITEN
 // ------------------------------------------------------------------------------------------------
@@ -390,3 +385,5 @@ void EntryManager::searchhashtagEntry() {
     std::cout << "Bist du Zufrieden?" << std::endl;
     std::cin >> happy;
 }
+
+

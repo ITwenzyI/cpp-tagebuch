@@ -1,5 +1,6 @@
 
 #include "EntryManager.hpp"
+#include "ui/ConsoleInput.hpp"
 #include "ui/ConsoleRenderer.hpp"
 #include <fcntl.h>
 #include <io.h>
@@ -10,18 +11,17 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
     EntryManager entrymanager;
     ConsoleRenderer renderer;
+    ConsoleInput input;
 
     int choice;
     int choice_alltag;
     do {
         renderer.zeigeHauptmenue();
-        std::cin >> choice;
-        std::cin.ignore(); // Leerzeichen ignorieren
+        choice = input.leseZahl();
 
         if (choice == 1) {
             renderer.zeigeAlltagMenue();
-            std::cin >> choice_alltag;
-            std::cin.ignore(); // Leerzeichen ignorieren
+            choice_alltag = input.leseZahl();
 
             switch (choice_alltag) {
             case 1:

@@ -1,8 +1,8 @@
 #include "EntryManager.hpp"
 #include "../domain/Entry.hpp"
+#include "../storage/TagebuchRepository.hpp"
 #include <algorithm> // für std::remove
 #include <ctime>
-#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -11,10 +11,9 @@
 #include <string>
 #include <vector>
 
-namespace fs = std::filesystem; // Zeile 39 => fs statt std::filesystem
-
 void EntryManager::createEntry() {
     Entry eintrag;
+    TagebuchRepository repository;
 
     std::time_t t = std::time(nullptr);
     std::tm tm = *std::localtime(&t);
@@ -40,44 +39,31 @@ void EntryManager::createEntry() {
     std::cout << "#Geld: ";
     std::getline(std::cin, eintrag.geld);
 
-    fs::create_directories("data");
-    std::ofstream file("data/" + eintrag.datum + ".txt");
+    repository.erstelleDatenOrdner();
 
-    if (file.is_open()) {
-        for (const auto& zeile : eintrag.inDateiZeilen()) {
-            file << zeile << "\n";
-        }
-        file.close();
+    if (repository.schreibeNeuenEintrag(eintrag.datum, eintrag.inDateiZeilen())) {
         std::cout << "Eintrag gespeichert unter data/" << eintrag.datum << ".txt\n";
     } else {
         std::cerr << "Fehler beim Speichern des Eintrags!\n";
     }
 }
+
 // ------------------------------------------------------------------------------------------------
 //                                  EINTRÄGE BEARBEITEN
 // ------------------------------------------------------------------------------------------------
 
 void EntryManager::editEntry() {
+    TagebuchRepository repository;
+
     std::cout << "Welches Datum willst du bearbeiten (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
-    std::string path = "data/" + date + ".txt";
 
-    std::ifstream file(path);
-
-    if (!file) {
+    std::vector<std::string> lines;
+    if (!repository.leseEintrag(date, lines)) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
-
-    std::vector<std::string> lines;
-    std::string line;
-
-    while (std::getline(file, line)) {
-        lines.push_back(line);
-    }
-
-    file.close();
 
     size_t line_edit;
     for (line_edit = 0; line_edit < lines.size(); ++line_edit) {
@@ -115,18 +101,10 @@ void EntryManager::editEntry() {
         }
     }
 
-    std::ofstream out_file(path, std::ios::trunc); // Datei überschreiben
-
-    if (!out_file) {
+    if (!repository.ueberschreibeEintrag(date, lines)) {
         std::cerr << "Failed to open Datei to write!\n";
         return;
     }
-
-    for (const auto& updated_line : lines) {
-        out_file << updated_line << '\n'; // jede Zeile reinschreiben
-    }
-
-    out_file.close(); // wichtig: Datei schließen
 
     // 1. Aktuelles Datum
     std::time_t t = std::time(nullptr);
@@ -143,13 +121,9 @@ void EntryManager::editEntry() {
     }
 
     // 3. Änderungsvermerk unten anhängen
-    std::ofstream append_file(path, std::ios::app); // Anhängen
-    if (append_file) {
-        append_file << "------------------------------\n"
-                    << "Zuletzt bearbeitet am: " << dateStr << " (Bearbeitet: " << category
-                    << ")\n";
-        append_file.close();
-    } else {
+    if (!repository.haengeAn(date,
+            "------------------------------\nZuletzt bearbeitet am: " + dateStr
+                + " (Bearbeitet: " + category + ")\n")) {
         std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
     }
 }
@@ -159,26 +133,17 @@ void EntryManager::editEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryManager::showEntry() {
+    TagebuchRepository repository;
+
     std::cout << "Welches Datum willst du anschauen (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
-    std::string path = "data/" + date + ".txt";
 
-    std::ifstream file(path);
-
-    if (!file) {
+    std::vector<std::string> lines;
+    if (!repository.leseEintrag(date, lines)) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
-
-    std::vector<std::string> lines;
-    std::string line;
-
-    while (std::getline(file, line)) {
-        lines.push_back(line);
-    }
-
-    file.close();
 
     for (size_t l = 0; l < lines.size(); ++l) {
         std::cout << l + 1 << "." << lines[l] << std::endl;
@@ -220,18 +185,10 @@ void EntryManager::showEntry() {
             }
         }
 
-        std::ofstream out_file(path, std::ios::trunc); // Datei überschreiben
-
-        if (!out_file) {
+        if (!repository.ueberschreibeEintrag(date, lines)) {
             std::cerr << "Datei konnte nicht gelesen werden.\n";
             return;
         }
-
-        for (const auto& updated_line : lines) {
-            out_file << updated_line << '\n'; // jede Zeile reinschreiben
-        }
-
-        out_file.close(); // wichtig: Datei sauber schließen
 
         // 1. Aktuelles Datum
         std::time_t t = std::time(nullptr);
@@ -248,36 +205,22 @@ void EntryManager::showEntry() {
         }
 
         // 3. Änderungsvermerk unten anhängen
-        std::ofstream append_file(path, std::ios::app); // Anhängen
-        if (append_file) {
-            append_file << "------------------------------\n"
-                        << "Zuletzt bearbeitet am: " << dateStr << " (Bearbeitet: " << category
-                        << ")\n";
-            append_file.close();
-        } else {
+        if (!repository.haengeAn(date,
+                "------------------------------\nZuletzt bearbeitet am: " + dateStr
+                    + " (Bearbeitet: " + category + ")\n")) {
             std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
         }
     }
 }
 
 void EntryManager::onlyshowEntry(std::string date) {
-    std::string path = "data/" + date + ".txt";
+    TagebuchRepository repository;
 
-    std::ifstream file(path);
-
-    if (!file) {
+    std::vector<std::string> lines;
+    if (!repository.leseEintrag(date, lines)) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
-
-    std::vector<std::string> lines;
-    std::string line;
-
-    while (std::getline(file, line)) {
-        lines.push_back(line);
-    }
-
-    file.close();
 
     for (size_t l = 0; l < lines.size(); ++l) {
         std::cout << l + 1 << "." << lines[l] << std::endl;
@@ -289,10 +232,11 @@ void EntryManager::onlyshowEntry(std::string date) {
 // ------------------------------------------------------------------------------------------------
 
 void EntryManager::deleteEntry() {
+    TagebuchRepository repository;
+
     std::cerr << "Welches Datum willst du entfernen (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
-    std::string path = "data/" + date + ".txt";
 
     onlyshowEntry(date);
     std::string answer;
@@ -300,8 +244,8 @@ void EntryManager::deleteEntry() {
     std::cin >> answer;
     std::cin.ignore();
     if (answer == "Ja" || answer == "ja") {
-        if (fs::exists(path)) {
-            if (fs::remove(path)) {
+        if (repository.existiertEintrag(date)) {
+            if (repository.entferneEintrag(date)) {
                 std::cerr << "Eintrag wurde entfernt.\n";
             } else {
                 std::cerr << "Eintrag konnte nicht entfernt werden!\n";
@@ -317,6 +261,8 @@ void EntryManager::deleteEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryManager::searchhashtagEntry() {
+    TagebuchRepository repository;
+
     std::string hashtag;
     std::cout << "Nach welchem # willst du Suchen (Zur Auswahl: Training, Essen, Schlaf, Stimmung, "
                  "Produktivität, Freizeit und Geld)?"
@@ -337,7 +283,7 @@ void EntryManager::searchhashtagEntry() {
     int start = std::stoi(startDate);
     int end = std::stoi(endDate);
 
-    for (const auto& entry : fs::directory_iterator("data")) {
+    for (const auto& entry : repository.listeDateienImDataOrdner()) {
         std::string filename = entry.path().filename().string(); // z.B. "04.05.2025.txt"
 
         // Nur .txt-Dateien verarbeiten
@@ -385,5 +331,3 @@ void EntryManager::searchhashtagEntry() {
     std::cout << "Bist du Zufrieden?" << std::endl;
     std::cin >> happy;
 }
-
-

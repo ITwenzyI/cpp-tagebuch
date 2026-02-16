@@ -12,6 +12,12 @@ void EntryService::createEntry() {
 
     // Datum wird bei Erstellung gesetzt und als Dateiname genutzt.
     eintrag.datum = aktuellesDatumAlsString();
+    repository.erstelleDatenOrdner();
+
+    if (repository.existiertEintrag(eintrag.datum)) {
+        behandleBestehendenTageseintrag(eintrag.datum);
+        return;
+    }
 
     std::cout << "Eintrag für " << eintrag.datum << " erstellen:\n" << std::endl;
     std::cout << "Author: " << std::endl;
@@ -31,12 +37,35 @@ void EntryService::createEntry() {
     std::cout << "#Geld: ";
     std::getline(std::cin, eintrag.geld);
 
-    repository.erstelleDatenOrdner();
-
     if (repository.schreibeNeuenEintrag(eintrag.datum, eintrag.inDateiZeilen())) {
         std::cout << "Eintrag gespeichert unter data/" << eintrag.datum << ".txt\n";
     } else {
         std::cerr << "Fehler beim Speichern des Eintrags!\n";
+    }
+}
+
+
+void EntryService::behandleBestehendenTageseintrag(const std::string& date) {
+    std::cout << "Fuer heute (" << date << ") existiert bereits ein Eintrag." << std::endl;
+    std::cout << "Willst du ihn anschauen oder bearbeiten?" << std::endl;
+    std::cout << "1. Eintrag anschauen." << std::endl;
+    std::cout << "2. Eintrag bearbeiten." << std::endl;
+    std::cout << "0. Zurueck." << std::endl;
+    std::cout << "Deine Auswahl: ";
+
+    int auswahl;
+    std::cin >> auswahl;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    switch (auswahl) {
+    case 1:
+        zeigeEintragMitDatum(date);
+        break;
+    case 2:
+        bearbeiteEintragMitDatum(date, "Datei konnte nicht gelesen werden.\n");
+        break;
+    default:
+        break;
     }
 }
 
@@ -262,3 +291,7 @@ void EntryService::searchhashtagEntry() {
     std::cout << "Bist du Zufrieden?" << std::endl;
     std::cin >> happy;
 }
+
+
+
+

@@ -3,7 +3,6 @@
 #include "domain/Entry.hpp"
 #include "storage/TagebuchRepository.hpp"
 #include "util/DatumsUtils.hpp"
-#include <fstream>
 #include <iostream>
 #include <limits>
 #include <string>
@@ -239,18 +238,14 @@ void EntryService::searchhashtagEntry() {
         // Prüfen, ob im Zeitraum
         if (fileDate >= start && fileDate <= end) {
             // Datei liegt im Zeitraum → hier kannst du später öffnen und nach Hashtag suchen
-            const std::string path = entry.path().string(); // vollständiger Pfad
-
-            std::ifstream file(path);
-            if (!file) {
+            std::vector<std::string> dateiZeilen;
+            if (!repository.leseDatei(entry.path(), dateiZeilen)) {
                 std::cerr << "Datei konnte nicht gelesen werden.\n";
                 continue;
             }
 
-            std::string line;
             bool foundInFile = false;
-
-            while (std::getline(file, line)) {
+            for (const auto& line : dateiZeilen) {
                 if (line.find(hashtag) != std::string::npos) {
                     if (!foundInFile) {
                         std::cout << "=== " << filename.substr(0, filename.size() - 4) << " ===\n";

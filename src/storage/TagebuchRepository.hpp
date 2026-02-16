@@ -7,6 +7,7 @@
 
 class TagebuchRepository {
   public:
+    // Stellt sicher, dass der Ablageordner existiert.
     void erstelleDatenOrdner() const;
     [[nodiscard]] bool schreibeNeuenEintrag(
         const std::string& datum, const std::vector<std::string>& zeilen) const;
@@ -22,6 +23,7 @@ class TagebuchRepository {
     [[nodiscard]] std::string eintragPfad(const std::string& datum) const;
 
   private:
+    // Zentraler Einstieg für den Datenordnerpfad.
     static const std::filesystem::path& datenOrdnerPfad();
 };
 

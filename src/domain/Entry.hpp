@@ -6,6 +6,7 @@
 
 class Entry {
   public:
+    // Entspricht der Dateinamenskonvention TT.MM.JJJJ.
     std::string datum;
     std::string author;
     std::string training;
@@ -16,6 +17,7 @@ class Entry {
     std::string freizeit;
     std::string geld;
 
+    // Baut die persistierte Textrepräsentation in der bestehenden Reihenfolge.
     [[nodiscard]] std::vector<std::string> inDateiZeilen() const;
 };
 

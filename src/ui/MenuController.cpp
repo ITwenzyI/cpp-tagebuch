@@ -1,6 +1,7 @@
 #include "MenuController.hpp"
 
 namespace {
+// Menüwerte als benannte Konstanten statt verstreuter Zahlen.
 constexpr int HAUPTMENUE_TAGEBUCH = 1;
 constexpr int ALLTAG_NEUER_EINTRAG = 1;
 constexpr int ALLTAG_EINTRAG_ANZEIGEN = 2;
@@ -25,6 +26,7 @@ int MenuController::starte() {
             choice_alltag = input.leseZahl();
 
             switch (choice_alltag) {
+            // Delegiert die gewählte Aktion an den Service.
             case ALLTAG_NEUER_EINTRAG:
                 entryService.createEntry();
                 break;

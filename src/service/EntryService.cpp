@@ -10,6 +10,7 @@
 void EntryService::createEntry() {
     Entry eintrag;
 
+    // Datum wird bei Erstellung gesetzt und als Dateiname genutzt.
     eintrag.datum = aktuellesDatumAlsString();
 
     std::cout << "Eintrag für " << eintrag.datum << " erstellen:\n" << std::endl;
@@ -95,6 +96,7 @@ void EntryService::onlyshowEntry(const std::string& date) {
 
 void EntryService::bearbeiteEintragInteraktiv(
     const std::string& date, std::vector<std::string>& lines, const std::string& fehlerText) {
+    // Vor der Auswahl wird immer der aktuelle Stand mit Zeilennummern gezeigt.
     zeigeZeilen(lines);
 
     size_t line_edit;
@@ -118,7 +120,7 @@ void EntryService::bearbeiteEintragInteraktiv(
 
         originalLine = lines[line_edit - 1];
 
-        // Finde die Position vom Doppelpunkt
+        // Es wird nur der Wertteil ersetzt, der Kategorie-Präfix bleibt unverändert.
         const size_t pos = originalLine.find(":");
 
         if (pos != std::string::npos) {
@@ -134,6 +136,7 @@ void EntryService::bearbeiteEintragInteraktiv(
         return;
     }
 
+    // Änderungsvermerk bleibt wie bisher immer am Dateiende.
     haengeAenderungsvermerkAn(date, originalLine);
 }
 
@@ -211,6 +214,7 @@ void EntryService::searchhashtagEntry() {
     const int start = datumOhnePunkteAlsZahl(startDate);
     const int end = datumOhnePunkteAlsZahl(endDate);
 
+    // Durchsucht nur Datumsdateien im bekannten Format.
     for (const auto& entry : repository.listeDateienImDataOrdner()) {
         const std::string filename = entry.path().filename().string(); // z.B. "04.05.2025.txt"
 

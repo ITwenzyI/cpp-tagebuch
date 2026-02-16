@@ -12,7 +12,8 @@ constexpr int ALLTAG_HASHTAG_SUCHE = 5;
 
 MenuController::MenuController(
     ConsoleRenderer& renderer, ConsoleInput& input, EntryService& entryService)
-    : renderer(renderer), input(input), entryService(entryService) {}
+    : renderer(renderer), input(input), entryService(entryService) {
+}
 
 int MenuController::starte() {
     int choice;
@@ -26,25 +27,25 @@ int MenuController::starte() {
             choice_alltag = input.leseZahl();
 
             switch (choice_alltag) {
-            // Delegiert die gewählte Aktion an den Service.
-            case ALLTAG_NEUER_EINTRAG:
-                entryService.createEntry();
-                break;
-            case ALLTAG_EINTRAG_ANZEIGEN:
-                entryService.showEntry();
-                break;
-            case ALLTAG_EINTRAG_BEARBEITEN:
-                entryService.editEntry();
-                break;
-            case ALLTAG_EINTRAG_ENTFERNEN:
-                entryService.deleteEntry();
-                break;
-            case ALLTAG_HASHTAG_SUCHE:
-                entryService.searchhashtagEntry();
-                break;
-            default:
-                renderer.zeigeDanke();
-                return 0;
+                // Delegiert die gewählte Aktion an den Service.
+                case ALLTAG_NEUER_EINTRAG:
+                    entryService.createEntry();
+                    break;
+                case ALLTAG_EINTRAG_ANZEIGEN:
+                    entryService.showEntry();
+                    break;
+                case ALLTAG_EINTRAG_BEARBEITEN:
+                    entryService.editEntry();
+                    break;
+                case ALLTAG_EINTRAG_ENTFERNEN:
+                    entryService.deleteEntry();
+                    break;
+                case ALLTAG_HASHTAG_SUCHE:
+                    entryService.searchhashtagEntry();
+                    break;
+                default:
+                    renderer.zeigeDanke();
+                    return 0;
             }
         }
 

@@ -1,5 +1,14 @@
 #include "MenuController.hpp"
 
+namespace {
+constexpr int HAUPTMENUE_TAGEBUCH = 1;
+constexpr int ALLTAG_NEUER_EINTRAG = 1;
+constexpr int ALLTAG_EINTRAG_ANZEIGEN = 2;
+constexpr int ALLTAG_EINTRAG_BEARBEITEN = 3;
+constexpr int ALLTAG_EINTRAG_ENTFERNEN = 4;
+constexpr int ALLTAG_HASHTAG_SUCHE = 5;
+} // namespace
+
 MenuController::MenuController(
     ConsoleRenderer& renderer, ConsoleInput& input, EntryService& entryService)
     : renderer(renderer), input(input), entryService(entryService) {}
@@ -11,24 +20,24 @@ int MenuController::starte() {
         renderer.zeigeHauptmenue();
         choice = input.leseZahl();
 
-        if (choice == 1) {
+        if (choice == HAUPTMENUE_TAGEBUCH) {
             renderer.zeigeAlltagMenue();
             choice_alltag = input.leseZahl();
 
             switch (choice_alltag) {
-            case 1:
+            case ALLTAG_NEUER_EINTRAG:
                 entryService.createEntry();
                 break;
-            case 2:
+            case ALLTAG_EINTRAG_ANZEIGEN:
                 entryService.showEntry();
                 break;
-            case 3:
+            case ALLTAG_EINTRAG_BEARBEITEN:
                 entryService.editEntry();
                 break;
-            case 4:
+            case ALLTAG_EINTRAG_ENTFERNEN:
                 entryService.deleteEntry();
                 break;
-            case 5:
+            case ALLTAG_HASHTAG_SUCHE:
                 entryService.searchhashtagEntry();
                 break;
             default:

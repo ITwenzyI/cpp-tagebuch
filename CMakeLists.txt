@@ -9,3 +9,9 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_executable(DigitalesTagebuch ${SOURCES})
 target_include_directories(DigitalesTagebuch PRIVATE src)
+
+if (MSVC)
+    target_compile_options(DigitalesTagebuch PRIVATE /utf-8)
+else()
+    target_compile_options(DigitalesTagebuch PRIVATE -finput-charset=UTF-8 -fexec-charset=UTF-8)
+endif()

@@ -49,13 +49,17 @@ void EntryService::editEntry() {
     std::string date;
     std::cin >> date;
 
+    bearbeiteEintragMitDatum(date, "Failed to open Datei to write!\n");
+}
+
+void EntryService::bearbeiteEintragMitDatum(const std::string& date, const std::string& fehlerText) {
     std::vector<std::string> lines;
     if (!repository.leseEintrag(date, lines)) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
 
-    bearbeiteEintragInteraktiv(date, lines, "Failed to open Datei to write!\n");
+    bearbeiteEintragInteraktiv(date, lines, fehlerText);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -67,6 +71,10 @@ void EntryService::showEntry() {
     std::string date;
     std::cin >> date;
 
+    zeigeEintragMitDatum(date);
+}
+
+void EntryService::zeigeEintragMitDatum(const std::string& date) {
     std::vector<std::string> lines;
     if (!repository.leseEintrag(date, lines)) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";

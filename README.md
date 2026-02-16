@@ -1,60 +1,62 @@
-# 📘 C++ Tagebuch – Persönliches C++-Journal
+﻿# Digitales Tagebuch (C++)
 
-Ein persönliches Tagebuch-Tool in C++, das tägliche Einträge über Training, Essen, Schlaf, Stimmung, Produktivität, Freizeit und Finanzen erfasst, speichert, bearbeitet und durchsucht.  
-Das Projekt dient sowohl als Lernprojekt für Datei-I/O, Zeitfunktionen, Strings und std::filesystem als auch als praktisches Tool für mich selbst. Vorschläge sind immer willkommen :).
+Ein schlankes, konsolenbasiertes Tagebuch in modernem C++.  
+Das Programm erstellt, speichert, bearbeitet, löscht und durchsucht tägliche Einträge in lokalen Textdateien.
 
----
+## Überblick
 
-## ✨ Features
+- Fokus auf einfache Bedienung in der Konsole
+- Lokale Datenspeicherung im Ordner `data/`
+- Keine externen Laufzeitabhängigkeiten
+- Modulare Architektur (Domain, Storage, Service, UI, App)
 
-- 📅 Neue Einträge erstellen (Datum wird automatisch erkannt)
-- ✏️ Bestehende Einträge gezielt bearbeiten (zeilenbasiert)
-- 📂 Einträge als `.txt` in einem `data/`-Ordner speichern
-- 👀 Einträge anzeigen lassen mit Rückfrage zur Bearbeitung
-- 🗑 Einträge gezielt löschen
-- 🔎 Einträge nach #Kategorien (z. B. `#Training`, `#Geld`) in einem Zeitbereich durchsuchen
+## Funktionen
 
----
+- Neue Einträge erstellen (Datum automatisch im Format `TT.MM.JJJJ`)
+- Einträge anzeigen
+- Einträge bearbeiten (zeilenbasiert)
+- Einträge löschen
+- Suche nach Kategorien/Hashtags in einem Datumsbereich (z. B. `Training`, `Geld`)
 
-## 🧠 Was man dabei lernt
+## Projektstruktur
 
-- Umgang mit `std::filesystem` zum Dateimanagement
-- Lesen & Schreiben von Dateien mit `ifstream`/`ofstream`
-- Umgang mit Datum/Zeit via `<ctime>` und `<iomanip>`
-- Eingabe mit `std::getline`, `std::cin`, `std::ignore`
-- saubere Trennung von Funktionen (OOP mit `EntryManager`)
+```text
+src/
+  app/       # Application/Composition Root
+  domain/    # Domänenmodell (Entry)
+  service/   # Geschäftsabläufe (EntryService)
+  storage/   # Dateizugriff (TagebuchRepository)
+  ui/        # Konsolen-Ein/-Ausgabe und Menüsteuerung
+  util/      # Hilfsfunktionen (z. B. Datum)
+  main.cpp   # Startpunkt
+```
 
----
+## Datenformat
 
-## 📂 Beispiel-Datei (data/04.05.2025.txt)
+Jeder Eintrag wird als Datei `data/TT.MM.JJJJ.txt` gespeichert.  
+Der Inhalt bleibt bewusst einfach und textbasiert, damit er direkt lesbar ist und leicht weiterverarbeitet werden kann.
 
-Erstellt von Kilian am 04.05.2025. :)
+Beispiel:
+
+```text
+       Erstellt von Kilian am 04.05.2025. :)
 #Training: 30 Min Laufen
-
 #Essen: gesund, 3 Mahlzeiten
-
 #Schlaf: 7h
-
 #Stimmung: ausgeglichen
-
 #Produktivität: gut
-
 #Freizeit: 2h Netflix
-
 #Geld: 5€ ausgegeben
-
 ------------------------------
 Zuletzt bearbeitet am: 05.05.2025 (Bearbeitet: #Stimmung)
+```
 
----
+## Technische Hinweise
 
-## 📌 Hinweise
-Das Projekt speichert alle Daten lokal im data/-Ordner.
+- Zeichenkodierung: UTF-8 (über `.editorconfig` und Compiler-Flags abgesichert)
+- Persistenz: `std::filesystem` + `ifstream`/`ofstream`
+- Zielsetzung: einfaches, nachvollziehbares Tagebuch mit stabiler Dateistruktur
 
-Es ist bewusst textbasiert, um Einblick in einfache Benutzerführung und Dateisysteme zu geben.
+## Autor
 
-Ideal für Einsteiger*innen, die C++ praxisnah üben möchten.
-
-## 👤 Author
-This project was created by **Kilian** as part of independent study in Medical Informatics.
-The software was fully developed in C++ using modern programming techniques.
+Entwickelt von **Kilian**.

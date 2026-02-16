@@ -10,7 +10,6 @@
 
 void EntryService::createEntry() {
     Entry eintrag;
-    TagebuchRepository repository;
 
     eintrag.datum = aktuellesDatumAlsString();
 
@@ -46,8 +45,6 @@ void EntryService::createEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::editEntry() {
-    TagebuchRepository repository;
-
     std::cout << "Welches Datum willst du bearbeiten (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
@@ -66,8 +63,6 @@ void EntryService::editEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::showEntry() {
-    TagebuchRepository repository;
-
     std::cout << "Welches Datum willst du anschauen (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
@@ -92,8 +87,6 @@ void EntryService::showEntry() {
 }
 
 void EntryService::onlyshowEntry(const std::string& date) {
-    TagebuchRepository repository;
-
     std::vector<std::string> lines;
     if (!repository.leseEintrag(date, lines)) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
@@ -107,8 +100,6 @@ void EntryService::onlyshowEntry(const std::string& date) {
 
 void EntryService::bearbeiteEintragInteraktiv(
     const std::string& date, std::vector<std::string>& lines, const std::string& fehlerText) {
-    TagebuchRepository repository;
-
     size_t line_edit;
     for (line_edit = 0; line_edit < lines.size(); ++line_edit) {
         std::cout << line_edit + 1 << "." << lines[line_edit] << std::endl;
@@ -154,8 +145,6 @@ void EntryService::bearbeiteEintragInteraktiv(
 }
 
 void EntryService::haengeAenderungsvermerkAn(const std::string& date, const std::string& originalLine) {
-    TagebuchRepository repository;
-
     std::string category;
     const size_t pos2 = originalLine.find(":");
     if (pos2 != std::string::npos) {
@@ -174,8 +163,6 @@ void EntryService::haengeAenderungsvermerkAn(const std::string& date, const std:
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::deleteEntry() {
-    TagebuchRepository repository;
-
     std::cerr << "Welches Datum willst du entfernen (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
@@ -203,8 +190,6 @@ void EntryService::deleteEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::searchhashtagEntry() {
-    TagebuchRepository repository;
-
     std::string hashtag;
     std::cout << "Nach welchem # willst du Suchen (Zur Auswahl: Training, Essen, Schlaf, Stimmung, "
                  "Produktivität, Freizeit und Geld)?"

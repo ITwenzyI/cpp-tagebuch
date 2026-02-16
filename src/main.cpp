@@ -1,5 +1,6 @@
 
 #include "EntryManager.hpp"
+#include "ui/ConsoleRenderer.hpp"
 #include <fcntl.h>
 #include <io.h>
 #include <iostream>
@@ -8,30 +9,17 @@
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     EntryManager entrymanager;
+    ConsoleRenderer renderer;
 
     int choice;
     int choice_alltag;
     do {
-        std::cout << "\n|====| Kilians Digitales Tagebuch |====|\n";
-        std::cout << "\n";
-        std::cout << "1. Tagebuch. \n";
-        std::cout << "0. Beenden.\n";
-        std::cout << "\n";
-        std::cout << "Deine Auswahl: ";
+        renderer.zeigeHauptmenue();
         std::cin >> choice;
         std::cin.ignore(); // Leerzeichen ignorieren
 
         if (choice == 1) {
-            std::cout << "\n-- Alltags Tagebuch --\n";
-            std::cout << "\n";
-            std::cout << "1. Neuen Eintrag erstellen.\n";
-            std::cout << "2. Eintrag anzeigen.\n";
-            std::cout << "3. Eintrag bearbeiten.\n";
-            std::cout << "4. Eintrag entfernen.\n";
-            std::cout << "5. Nach # suchen.\n";
-            std::cout << "0. Beenden!\n";
-            std::cout << "\n";
-            std::cout << "Deine Auswahl: ";
+            renderer.zeigeAlltagMenue();
             std::cin >> choice_alltag;
             std::cin.ignore(); // Leerzeichen ignorieren
 
@@ -52,13 +40,13 @@ int main() {
                 entrymanager.searchhashtagEntry();
                 break;
             default:
-                std::cerr << "Danke dir :)!\n";
+                renderer.zeigeDanke();
                 return 0;
             }
         }
 
     } while (choice != 0);
 
-    std::cerr << "Danke dir :)!\n";
+    renderer.zeigeDanke();
     return 0;
 }

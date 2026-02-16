@@ -1,0 +1,133 @@
+# ------------------------------------------------------------
+# Basis-Stil
+# ------------------------------------------------------------
+BasedOnStyle: LLVM # Solider, neutraler Ausgangspunkt
+
+Language: Cpp # Explizit C++
+
+# ------------------------------------------------------------
+# Einrückung & Tabs
+# ------------------------------------------------------------
+IndentWidth: 4 # 4 Spaces = Standard in C++
+TabWidth: 4
+UseTab: Never # Keine Tabs, nur Spaces
+
+ContinuationIndentWidth: 4
+
+# ------------------------------------------------------------
+# Zeilenlänge
+# ------------------------------------------------------------
+ColumnLimit: 100 # Realistisch für moderne Monitore
+
+# ------------------------------------------------------------
+# Klammerstil (Brace Style)
+# ------------------------------------------------------------
+BreakBeforeBraces: Attach # Öffnende Klammer bleibt in der Zeile
+
+# Beispiel:
+# if (x) {
+#     foo();
+# }
+
+# ------------------------------------------------------------
+# Pointer & Referenzen (modern!)
+# ------------------------------------------------------------
+PointerAlignment: Left # int* p;
+ReferenceAlignment: Left # int& r;
+
+# Wichtig: * und & gehören zum Typ, nicht zur Variable
+
+# ------------------------------------------------------------
+# const / volatile / etc. Platzierung
+# ------------------------------------------------------------
+QualifierAlignment: Left
+
+# Ergebnis:
+# const std::string& name;
+
+# ------------------------------------------------------------
+# Leerzeichen-Regeln
+# ------------------------------------------------------------
+SpaceBeforeParens: ControlStatements
+# if (x)    ✔
+# foo(x)   ✔
+
+SpacesInParentheses: false
+SpacesInAngles: false
+SpacesInSquareBrackets: false
+
+# ------------------------------------------------------------
+# Kurze Statements NICHT erzwingen
+# ------------------------------------------------------------
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: Never
+
+# Lesbarkeit > Kompaktheit
+
+# ------------------------------------------------------------
+# Ausrichtung / Alignment (bewusst reduziert!)
+# ------------------------------------------------------------
+AlignAfterOpenBracket: DontAlign
+AlignOperands: false
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignTrailingComments: false
+
+# Verhindert "ASCII-Tabellen", die beim Ändern kaputtgehen
+
+# ------------------------------------------------------------
+# Funktionsdeklarationen
+# ------------------------------------------------------------
+AlwaysBreakAfterReturnType: None
+BinPackParameters: true
+BinPackArguments: true
+
+# ------------------------------------------------------------
+# Switch / Case
+# ------------------------------------------------------------
+IndentCaseLabels: true
+IndentCaseBlocks: false
+
+# ------------------------------------------------------------
+# Includes
+# ------------------------------------------------------------
+SortIncludes: true
+IncludeBlocks: Preserve
+
+# ------------------------------------------------------------
+# Kommentare
+# ------------------------------------------------------------
+ReflowComments: false
+# Kommentare werden NICHT automatisch umformatiert
+
+# ------------------------------------------------------------
+# Namespace-Handling
+# ------------------------------------------------------------
+NamespaceIndentation: Inner
+
+# namespace foo {
+#     class Bar {};
+# }
+
+# ------------------------------------------------------------
+# Templates
+# ------------------------------------------------------------
+AlwaysBreakTemplateDeclarations: No
+
+# ------------------------------------------------------------
+# Lambdas
+# ------------------------------------------------------------
+BeforeLambdaBody: Space
+
+# ------------------------------------------------------------
+# C++ spezifisch
+# ------------------------------------------------------------
+Standard: c++20
+
+# ------------------------------------------------------------
+# Sonstiges (bewusst konservativ)
+# ------------------------------------------------------------
+Cpp11BracedListStyle: true
+FixNamespaceComments: true

@@ -3,7 +3,7 @@
 
 #include <string>
 
-std::string aktuellesDatumAlsString();
-int datumOhnePunkteAlsZahl(std::string datum);
+[[nodiscard]] std::string aktuellesDatumAlsString();
+[[nodiscard]] int datumOhnePunkteAlsZahl(std::string datum);
 
 #endif

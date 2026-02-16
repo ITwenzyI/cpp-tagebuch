@@ -16,7 +16,7 @@ class Entry {
     std::string freizeit;
     std::string geld;
 
-    std::vector<std::string> inDateiZeilen() const;
+    [[nodiscard]] std::vector<std::string> inDateiZeilen() const;
 };
 
 #endif

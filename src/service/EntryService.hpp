@@ -15,6 +15,12 @@ class EntryService {
     void searchhashtagEntry();
 
   private:
+    // Bearbeitet einen Eintrag direkt über ein gegebenes Datum.
+    void bearbeiteEintragMitDatum(const std::string& date, const std::string& fehlerText);
+    // Zeigt einen Eintrag direkt über ein gegebenes Datum.
+    void zeigeEintragMitDatum(const std::string& date);
+    // Fragt bei vorhandenem Tages-Eintrag nach Folgeaktion.
+    void behandleBestehendenTageseintrag(const std::string& date);
     // Zeigt einen Eintrag nur an, ohne Folgeaktionen.
     void onlyshowEntry(const std::string& date);
     // Kapselt den wiederverwendeten Bearbeitungsablauf.

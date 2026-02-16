@@ -1,15 +1,18 @@
-#ifndef ENTRYMANAGER_HPP
-#define ENTRYMANAGER_HPP
+#ifndef SERVICE_ENTRYSERVICE_HPP
+#define SERVICE_ENTRYSERVICE_HPP
+
 #include <string>
 
-class EntryManager {
-public:
+class EntryService {
+  public:
     void createEntry();
     void editEntry();
     void showEntry();
-    void onlyshowEntry(std::string date);
     void deleteEntry();
     void searchhashtagEntry();
+
+  private:
+    void onlyshowEntry(std::string date);
 };
 
 #endif

@@ -1,9 +1,9 @@
 #include "Application.hpp"
 
-#include "../service/EntryService.hpp"
-#include "../ui/ConsoleInput.hpp"
-#include "../ui/ConsoleRenderer.hpp"
-#include "../ui/MenuController.hpp"
+#include "service/EntryService.hpp"
+#include "ui/ConsoleInput.hpp"
+#include "ui/ConsoleRenderer.hpp"
+#include "ui/MenuController.hpp"
 #include <windows.h>
 
 int Application::starte() {

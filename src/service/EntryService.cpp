@@ -1,26 +1,16 @@
 #include "EntryService.hpp"
 
-#include "../domain/Entry.hpp"
-#include "../storage/TagebuchRepository.hpp"
-#include <algorithm> // für std::remove
-#include <ctime>
-#include <fstream>
-#include <iomanip>
+#include "domain/Entry.hpp"
+#include "util/DatumsUtils.hpp"
 #include <iostream>
 #include <limits>
-#include <sstream>
 #include <string>
 #include <vector>
 
 void EntryService::createEntry() {
     Entry eintrag;
-    TagebuchRepository repository;
 
-    std::time_t t = std::time(nullptr);
-    std::tm tm = *std::localtime(&t);
-    std::ostringstream oss;
-    oss << std::put_time(&tm, "%d.%m.%Y");
-    eintrag.datum = oss.str();
+    eintrag.datum = aktuellesDatumAlsString();
 
     std::cout << "Eintrag für " << eintrag.datum << " erstellen:\n" << std::endl;
     std::cout << "Author: " << std::endl;
@@ -54,8 +44,6 @@ void EntryService::createEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::editEntry() {
-    TagebuchRepository repository;
-
     std::cout << "Welches Datum willst du bearbeiten (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
@@ -66,67 +54,7 @@ void EntryService::editEntry() {
         return;
     }
 
-    size_t line_edit;
-    for (line_edit = 0; line_edit < lines.size(); ++line_edit) {
-        std::cout << line_edit + 1 << "." << lines[line_edit] << std::endl;
-    }
-    std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)"
-              << std::endl;
-    std::cin >> line_edit;
-    std::cout << "Du willst also die Zeile: " << line_edit << " bearbeiten? (Ja oder Nein)"
-              << std::endl;
-    std::string answer;
-    std::cin >> answer;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
-        '\n'); // Leert Speicher also das \n von oben cin answer :D
-
-    std::string new_content;
-    std::string original_line2;
-    if (answer == "Ja" || answer == "ja") {
-        std::cout << "Gebe den neuen Text für die Zeile: " << line_edit << " ein." << std::endl;
-        std::getline(
-            std::cin, new_content); // Liest ganze Zeile ein auch mit Leerzeichen
-                                    // std::cin >> new_content; liest nur 1 Wort ein = Problem
-
-        std::string original_line = lines[line_edit - 1];
-        original_line2 = original_line;
-
-        // Finde die Position vom Doppelpunkt
-        size_t pos = original_line.find(":");
-
-        if (pos != std::string::npos) {
-            std::string prefix = original_line.substr(0, pos + 1); // z.B. "#Training:"
-            lines[line_edit - 1] = prefix + " " + new_content;     // neue Zeile zusammensetzen
-        } else {
-            std::cerr << "Ungültiges Format! Kein ':' gefunden.\n";
-        }
-    }
-
-    if (!repository.ueberschreibeEintrag(date, lines)) {
-        std::cerr << "Failed to open Datei to write!\n";
-        return;
-    }
-
-    // 1. Aktuelles Datum
-    std::time_t t = std::time(nullptr);
-    std::tm tm = *std::localtime(&t);
-    std::ostringstream oss;
-    oss << std::put_time(&tm, "%d.%m.%Y");
-    std::string dateStr = oss.str();
-
-    // 2. Kategorie aus ursprünglicher Zeile extrahieren
-    std::string category;
-    size_t pos2 = original_line2.find(":");
-    if (pos2 != std::string::npos) {
-        category = original_line2.substr(0, pos2);
-    }
-
-    // 3. Änderungsvermerk unten anhängen
-    if (!repository.haengeAn(date,
-            "------------------------------\nZuletzt bearbeitet am: " + dateStr
-                + " (Bearbeitet: " + category + ")\n")) {
-        std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
-    }
+    bearbeiteEintragInteraktiv(date, lines, "Failed to open Datei to write!\n");
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -134,8 +62,6 @@ void EntryService::editEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::showEntry() {
-    TagebuchRepository repository;
-
     std::cout << "Welches Datum willst du anschauen (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
@@ -146,85 +72,92 @@ void EntryService::showEntry() {
         return;
     }
 
-    for (size_t l = 0; l < lines.size(); ++l) {
-        std::cout << l + 1 << "." << lines[l] << std::endl;
-    }
+    zeigeZeilen(lines);
 
     std::string answer;
     std::cout << "Willst du diesen Eintrag: " << date << " bearbeiten? (Ja oder Nein)" << std::endl;
     std::cin >> answer;
     std::cin.ignore(); // Leerzeichen ignorieren
-    if (answer == "Ja" || answer == "ja") {
-        int line_edit;
-        std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)"
-                  << std::endl;
-        std::cin >> line_edit;
-        std::cout << "Du willst also die Zeile: " << line_edit << " bearbeiten? (Ja oder Nein)"
-                  << std::endl;
-        std::string answer2;
-        std::cin >> answer2;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
-            '\n'); // Leert Speicher also das \n von oben cin answer :D
-
-        std::string original_line2;
-        std::string new_content;
-        if (answer2 == "Ja" || answer2 == "ja") {
-            std::cout << "Gebe den neuen Text für die Zeile: " << line_edit << " ein." << std::endl;
-            std::getline(std::cin, new_content); // Liest ganze Zeile ein auch mit Leerzeichen
-
-            std::string original_line = lines[line_edit - 1];
-            original_line2 = original_line;
-
-            // Finde die Position vom Doppelpunkt
-            size_t pos = original_line.find(":");
-
-            if (pos != std::string::npos) {
-                std::string prefix = original_line.substr(0, pos + 1); // z.B. "#Training:"
-                lines[line_edit - 1] = prefix + " " + new_content;     // neue Zeile zusammensetzen
-            } else {
-                std::cerr << "Ungültiges Format! Kein ':' gefunden.\n";
-            }
-        }
-
-        if (!repository.ueberschreibeEintrag(date, lines)) {
-            std::cerr << "Datei konnte nicht gelesen werden.\n";
-            return;
-        }
-
-        // 1. Aktuelles Datum
-        std::time_t t = std::time(nullptr);
-        std::tm tm = *std::localtime(&t);
-        std::ostringstream oss;
-        oss << std::put_time(&tm, "%d.%m.%Y");
-        std::string dateStr = oss.str();
-
-        // 2. Kategorie aus ursprünglicher Zeile extrahieren
-        std::string category;
-        size_t pos2 = original_line2.find(":");
-        if (pos2 != std::string::npos) {
-            category = original_line2.substr(0, pos2);
-        }
-
-        // 3. Änderungsvermerk unten anhängen
-        if (!repository.haengeAn(date,
-                "------------------------------\nZuletzt bearbeitet am: " + dateStr
-                    + " (Bearbeitet: " + category + ")\n")) {
-            std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
-        }
+    if (istJaAntwort(answer)) {
+        bearbeiteEintragInteraktiv(date, lines, "Datei konnte nicht gelesen werden.\n");
     }
 }
 
-void EntryService::onlyshowEntry(std::string date) {
-    TagebuchRepository repository;
-
+void EntryService::onlyshowEntry(const std::string& date) {
     std::vector<std::string> lines;
     if (!repository.leseEintrag(date, lines)) {
         std::cerr << "Datei konnte nicht gelesen werden.\n";
         return;
     }
 
-    for (size_t l = 0; l < lines.size(); ++l) {
-        std::cout << l + 1 << "." << lines[l] << std::endl;
+    zeigeZeilen(lines);
+}
+
+void EntryService::bearbeiteEintragInteraktiv(
+    const std::string& date, std::vector<std::string>& lines, const std::string& fehlerText) {
+    zeigeZeilen(lines);
+
+    size_t line_edit;
+    std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)"
+              << std::endl;
+    std::cin >> line_edit;
+    std::cout << "Du willst also die Zeile: " << line_edit << " bearbeiten? (Ja oder Nein)"
+              << std::endl;
+
+    std::string answer;
+    std::cin >> answer;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+        '\n'); // Leert Speicher also das \n von oben cin answer :D
+
+    std::string originalLine;
+    if (istJaAntwort(answer)) {
+        std::cout << "Gebe den neuen Text für die Zeile: " << line_edit << " ein." << std::endl;
+
+        std::string new_content;
+        std::getline(std::cin, new_content); // Liest ganze Zeile ein auch mit Leerzeichen
+
+        originalLine = lines[line_edit - 1];
+
+        // Finde die Position vom Doppelpunkt
+        const size_t pos = originalLine.find(":");
+
+        if (pos != std::string::npos) {
+            const std::string prefix = originalLine.substr(0, pos + 1); // z.B. "#Training:"
+            lines[line_edit - 1] = prefix + " " + new_content;          // neue Zeile zusammensetzen
+        } else {
+            std::cerr << "Ungültiges Format! Kein ':' gefunden.\n";
+        }
+    }
+
+    if (!repository.ueberschreibeEintrag(date, lines)) {
+        std::cerr << fehlerText;
+        return;
+    }
+
+    haengeAenderungsvermerkAn(date, originalLine);
+}
+
+void EntryService::haengeAenderungsvermerkAn(const std::string& date, const std::string& originalLine) {
+    std::string category;
+    const size_t pos2 = originalLine.find(":");
+    if (pos2 != std::string::npos) {
+        category = originalLine.substr(0, pos2);
+    }
+
+    if (!repository.haengeAn(date,
+            "------------------------------\nZuletzt bearbeitet am: " + aktuellesDatumAlsString()
+                + " (Bearbeitet: " + category + ")\n")) {
+        std::cerr << "Fehler beim Anhängen des Änderungsvermerks.\n";
+    }
+}
+
+bool EntryService::istJaAntwort(const std::string& antwort) {
+    return antwort == "Ja" || antwort == "ja";
+}
+
+void EntryService::zeigeZeilen(const std::vector<std::string>& lines) {
+    for (size_t index = 0; index < lines.size(); ++index) {
+        std::cout << index + 1 << "." << lines[index] << std::endl;
     }
 }
 
@@ -233,8 +166,6 @@ void EntryService::onlyshowEntry(std::string date) {
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::deleteEntry() {
-    TagebuchRepository repository;
-
     std::cerr << "Welches Datum willst du entfernen (TT.MM.JJJJ)?" << std::endl;
     std::string date;
     std::cin >> date;
@@ -244,7 +175,7 @@ void EntryService::deleteEntry() {
     std::cerr << "Du willst also diesen Eintrag vom " << date << " entfernen?" << std::endl;
     std::cin >> answer;
     std::cin.ignore();
-    if (answer == "Ja" || answer == "ja") {
+    if (istJaAntwort(answer)) {
         if (repository.existiertEintrag(date)) {
             if (repository.entferneEintrag(date)) {
                 std::cerr << "Eintrag wurde entfernt.\n";
@@ -262,30 +193,26 @@ void EntryService::deleteEntry() {
 // ------------------------------------------------------------------------------------------------
 
 void EntryService::searchhashtagEntry() {
-    TagebuchRepository repository;
-
     std::string hashtag;
     std::cout << "Nach welchem # willst du Suchen (Zur Auswahl: Training, Essen, Schlaf, Stimmung, "
                  "Produktivität, Freizeit und Geld)?"
               << std::endl;
     std::cin >> hashtag;
-    std::string startDate, endDate;
+
+    std::string startDate;
+    std::string endDate;
     std::cout << "In welchem Zeitraum willst du den #" << hashtag << " suchen und ausgeben?"
               << std::endl;
     std::cout << "Start-Datum (TT.MM.JJJJ) : " << std::endl;
     std::cin >> startDate;
     std::cout << "End-Datum (TT.MM.JJJJ) : " << std::endl;
     std::cin >> endDate;
-    // Punkte aus Datum entfernen
-    startDate.erase(std::remove(startDate.begin(), startDate.end(), '.'), startDate.end());
-    endDate.erase(std::remove(endDate.begin(), endDate.end(), '.'), endDate.end());
 
-    // In int umwandeln
-    int start = std::stoi(startDate);
-    int end = std::stoi(endDate);
+    const int start = datumOhnePunkteAlsZahl(startDate);
+    const int end = datumOhnePunkteAlsZahl(endDate);
 
     for (const auto& entry : repository.listeDateienImDataOrdner()) {
-        std::string filename = entry.path().filename().string(); // z.B. "04.05.2025.txt"
+        const std::string filename = entry.path().filename().string(); // z.B. "04.05.2025.txt"
 
         // Nur .txt-Dateien verarbeiten
         if (filename.size() < 11 || filename.substr(filename.size() - 4) != ".txt") {
@@ -293,29 +220,20 @@ void EntryService::searchhashtagEntry() {
         }
 
         // ".txt" entfernen → z.B. "04.05.2025"
-        std::string dateString = filename.substr(0, filename.size() - 4);
-
-        // Punkte entfernen → z.B. "04052025"
-        dateString.erase(std::remove(dateString.begin(), dateString.end(), '.'), dateString.end());
-
-        // In Zahl umwandeln
-        int fileDate = std::stoi(dateString);
+        const std::string dateString = filename.substr(0, filename.size() - 4);
+        const int fileDate = datumOhnePunkteAlsZahl(dateString);
 
         // Prüfen, ob im Zeitraum
         if (fileDate >= start && fileDate <= end) {
             // Datei liegt im Zeitraum → hier kannst du später öffnen und nach Hashtag suchen
-            std::string path = entry.path().string(); // vollständiger Pfad
-
-            std::ifstream file(path);
-            if (!file) {
+            std::vector<std::string> dateiZeilen;
+            if (!repository.leseDatei(entry.path(), dateiZeilen)) {
                 std::cerr << "Datei konnte nicht gelesen werden.\n";
                 continue;
             }
 
-            std::string line;
             bool foundInFile = false;
-
-            while (std::getline(file, line)) {
+            for (const auto& line : dateiZeilen) {
                 if (line.find(hashtag) != std::string::npos) {
                     if (!foundInFile) {
                         std::cout << "=== " << filename.substr(0, filename.size() - 4) << " ===\n";
@@ -324,10 +242,9 @@ void EntryService::searchhashtagEntry() {
                     std::cout << line << "\n";
                 }
             }
-
-            file.close();
         }
     }
+
     std::string happy;
     std::cout << "Bist du Zufrieden?" << std::endl;
     std::cin >> happy;

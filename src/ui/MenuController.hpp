@@ -1,7 +1,7 @@
 #ifndef UI_MENUCONTROLLER_HPP
 #define UI_MENUCONTROLLER_HPP
 
-#include "../service/EntryService.hpp"
+#include "service/EntryService.hpp"
 #include "ConsoleInput.hpp"
 #include "ConsoleRenderer.hpp"
 

@@ -5,8 +5,13 @@
 
 namespace fs = std::filesystem;
 
+const fs::path& TagebuchRepository::datenOrdnerPfad() {
+    static const fs::path datenOrdner = "data";
+    return datenOrdner;
+}
+
 void TagebuchRepository::erstelleDatenOrdner() const {
-    fs::create_directories("data");
+    fs::create_directories(datenOrdnerPfad());
 }
 
 bool TagebuchRepository::schreibeNeuenEintrag(
@@ -23,7 +28,12 @@ bool TagebuchRepository::schreibeNeuenEintrag(
 }
 
 bool TagebuchRepository::leseEintrag(const std::string& datum, std::vector<std::string>& zeilen) const {
-    std::ifstream file(eintragPfad(datum));
+    return leseDatei(eintragPfad(datum), zeilen);
+}
+
+bool TagebuchRepository::leseDatei(
+    const std::filesystem::path& dateiPfad, std::vector<std::string>& zeilen) const {
+    std::ifstream file(dateiPfad);
     if (!file) {
         return false;
     }
@@ -68,16 +78,16 @@ bool TagebuchRepository::entferneEintrag(const std::string& datum) const {
 
 std::vector<std::filesystem::directory_entry> TagebuchRepository::listeDateienImDataOrdner() const {
     std::vector<std::filesystem::directory_entry> dateien;
-    if (!fs::exists("data")) {
+    if (!fs::exists(datenOrdnerPfad())) {
         return dateien;
     }
 
-    for (const auto& entry : fs::directory_iterator("data")) {
+    for (const auto& entry : fs::directory_iterator(datenOrdnerPfad())) {
         dateien.push_back(entry);
     }
     return dateien;
 }
 
 std::string TagebuchRepository::eintragPfad(const std::string& datum) const {
-    return "data/" + datum + ".txt";
+    return (datenOrdnerPfad() / (datum + ".txt")).string();
 }

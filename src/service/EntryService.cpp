@@ -1,7 +1,6 @@
 #include "EntryService.hpp"
 
 #include "domain/Entry.hpp"
-#include "storage/TagebuchRepository.hpp"
 #include "util/DatumsUtils.hpp"
 #include <iostream>
 #include <limits>
@@ -73,15 +72,13 @@ void EntryService::showEntry() {
         return;
     }
 
-    for (size_t l = 0; l < lines.size(); ++l) {
-        std::cout << l + 1 << "." << lines[l] << std::endl;
-    }
+    zeigeZeilen(lines);
 
     std::string answer;
     std::cout << "Willst du diesen Eintrag: " << date << " bearbeiten? (Ja oder Nein)" << std::endl;
     std::cin >> answer;
     std::cin.ignore(); // Leerzeichen ignorieren
-    if (answer == "Ja" || answer == "ja") {
+    if (istJaAntwort(answer)) {
         bearbeiteEintragInteraktiv(date, lines, "Datei konnte nicht gelesen werden.\n");
     }
 }
@@ -93,18 +90,14 @@ void EntryService::onlyshowEntry(const std::string& date) {
         return;
     }
 
-    for (size_t l = 0; l < lines.size(); ++l) {
-        std::cout << l + 1 << "." << lines[l] << std::endl;
-    }
+    zeigeZeilen(lines);
 }
 
 void EntryService::bearbeiteEintragInteraktiv(
     const std::string& date, std::vector<std::string>& lines, const std::string& fehlerText) {
-    size_t line_edit;
-    for (line_edit = 0; line_edit < lines.size(); ++line_edit) {
-        std::cout << line_edit + 1 << "." << lines[line_edit] << std::endl;
-    }
+    zeigeZeilen(lines);
 
+    size_t line_edit;
     std::cout << "Welchen Zeile willst du in dem Eintrag " << date << " bearbeiten? (Zahl)"
               << std::endl;
     std::cin >> line_edit;
@@ -117,7 +110,7 @@ void EntryService::bearbeiteEintragInteraktiv(
         '\n'); // Leert Speicher also das \n von oben cin answer :D
 
     std::string originalLine;
-    if (answer == "Ja" || answer == "ja") {
+    if (istJaAntwort(answer)) {
         std::cout << "Gebe den neuen Text für die Zeile: " << line_edit << " ein." << std::endl;
 
         std::string new_content;
@@ -158,6 +151,16 @@ void EntryService::haengeAenderungsvermerkAn(const std::string& date, const std:
     }
 }
 
+bool EntryService::istJaAntwort(const std::string& antwort) {
+    return antwort == "Ja" || antwort == "ja";
+}
+
+void EntryService::zeigeZeilen(const std::vector<std::string>& lines) {
+    for (size_t index = 0; index < lines.size(); ++index) {
+        std::cout << index + 1 << "." << lines[index] << std::endl;
+    }
+}
+
 // ------------------------------------------------------------------------------------------------
 //                                  EINTRÄGE LÖSCHEN
 // ------------------------------------------------------------------------------------------------
@@ -172,7 +175,7 @@ void EntryService::deleteEntry() {
     std::cerr << "Du willst also diesen Eintrag vom " << date << " entfernen?" << std::endl;
     std::cin >> answer;
     std::cin.ignore();
-    if (answer == "Ja" || answer == "ja") {
+    if (istJaAntwort(answer)) {
         if (repository.existiertEintrag(date)) {
             if (repository.entferneEintrag(date)) {
                 std::cerr << "Eintrag wurde entfernt.\n";

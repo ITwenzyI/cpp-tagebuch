@@ -1,5 +1,5 @@
 
-#include "EntryManager.hpp"
+#include "service/EntryService.hpp"
 #include "ui/ConsoleInput.hpp"
 #include "ui/ConsoleRenderer.hpp"
 #include <fcntl.h>
@@ -9,7 +9,7 @@
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
-    EntryManager entrymanager;
+    EntryService entryService;
     ConsoleRenderer renderer;
     ConsoleInput input;
 
@@ -25,19 +25,19 @@ int main() {
 
             switch (choice_alltag) {
             case 1:
-                entrymanager.createEntry();
+                entryService.createEntry();
                 break;
             case 2:
-                entrymanager.showEntry();
+                entryService.showEntry();
                 break;
             case 3:
-                entrymanager.editEntry();
+                entryService.editEntry();
                 break;
             case 4:
-                entrymanager.deleteEntry();
+                entryService.deleteEntry();
                 break;
             case 5:
-                entrymanager.searchhashtagEntry();
+                entryService.searchhashtagEntry();
                 break;
             default:
                 renderer.zeigeDanke();

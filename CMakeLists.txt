@@ -4,6 +4,6 @@ project(DigitalesTagebuch)
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include)
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-add_executable(DigitalesTagebuch src/main.cpp ${SOURCES})
+add_executable(DigitalesTagebuch ${SOURCES})

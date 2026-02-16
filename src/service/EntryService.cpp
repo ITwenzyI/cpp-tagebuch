@@ -1,7 +1,7 @@
 #include "EntryService.hpp"
 
-#include "../domain/Entry.hpp"
-#include "../storage/TagebuchRepository.hpp"
+#include "domain/Entry.hpp"
+#include "storage/TagebuchRepository.hpp"
 #include <algorithm> // für std::remove
 #include <ctime>
 #include <fstream>
